@@ -1,19 +1,19 @@
 import { Container, Box, Typography, TextField, Button } from "@mui/material";
-
-import { useLogin } from "../../hooks/useLogin";
 import { useState } from "react";
 import { Link } from "react-router";
+import { userService } from "../../../api/services/userService";
 
 export const LoginPage = () => {
+  const { login } = userService();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const data = { email, pass };
 
-  const { imprimeValores } = useLogin({
-    data: [
-      { name: "email", value: email },
-      { name: "pass", value: pass },
-    ],
-  });
+  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const response = await login(data);
+    console.log(response);
+  };
 
   return (
     <Box
@@ -61,6 +61,7 @@ export const LoginPage = () => {
             color="primary"
             fullWidth
             sx={{ mt: 3 }}
+            onClick={handleLogin}
           >
             Iniciar Sesión
           </Button>

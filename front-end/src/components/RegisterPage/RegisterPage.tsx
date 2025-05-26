@@ -1,12 +1,14 @@
-import { Box, TextField, Button, Container, Typography } from "@mui/material";
-import { useForm } from "react-hook-form";
+import { TextField } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
+import SelectMultivalor from "../formsComponents/SelectMultivalue";
 
-//definir tipo
 type FormData = {
   nombre: string;
   correo: string;
   contrasenya: string;
   confirmContrasenya: string;
+  temasInteres: string[];
 };
 
 export const RegisterPage = () => {
@@ -15,9 +17,9 @@ export const RegisterPage = () => {
     handleSubmit,
     formState: { errors },
     watch,
+    control,
   } = useForm<FormData>();
 
-  //evento de tipo submit con el tipo que yo he creado de FormData
   const onSubmit = (data: FormData) => {
     console.log(data);
   };
@@ -46,7 +48,6 @@ export const RegisterPage = () => {
             error={!!errors.nombre}
             helperText={errors.nombre?.message}
           />
-
           <TextField
             label="Correo"
             type="email"
@@ -57,22 +58,22 @@ export const RegisterPage = () => {
                 message: "Correo no válido",
               },
             })}
-            error={!!errors.contrasenya}
-            helperText={errors.contrasenya?.message}
+            error={!!errors.correo}
+            helperText={errors.correo?.message}
           />
 
           <TextField
             label="Contraseña"
             type="password"
             {...register("contrasenya", {
-              required: "La contraseña  es obligatoria",
+              required: "La contraseña es obligatoria",
               pattern: {
                 value: /^.{9,}$/,
-                message: "La contraseña  no válida",
+                message: "La contraseña debe tener al menos 9 caracteres",
               },
             })}
-            error={!!errors.confirmContrasenya}
-            helperText={errors.confirmContrasenya?.message}
+            error={!!errors.contrasenya}
+            helperText={errors.contrasenya?.message}
           />
 
           <TextField
@@ -85,6 +86,41 @@ export const RegisterPage = () => {
             })}
             error={!!errors.confirmContrasenya}
             helperText={errors.confirmContrasenya?.message}
+          />
+
+          <Controller
+            name="temasInteres"
+            control={control}
+            defaultValue={[]}
+            rules={{
+              validate: (value) =>
+                value.length > 0 || "Selecciona al menos un tema",
+            }}
+            render={({ field }) => (
+              <SelectMultivalor
+                opciones={[
+                  "Política",
+                  "Economía",
+                  "Tecnología",
+                  "Cultura",
+                  "Deportes",
+                  "Internacional",
+                  "Salud",
+                  "Opinión",
+                  "Ciencia",
+                  "Educación",
+                  "Entretenimiento",
+                  "Sociedad",
+                  "Medio Ambiente",
+                  "Viajes",
+                  "Moda",
+                ]}
+                value={field.value}
+                onChange={field.onChange}
+                error={!!errors.temasInteres}
+                helperText={errors.temasInteres?.message}
+              />
+            )}
           />
 
           <Button type="submit" variant="contained">
