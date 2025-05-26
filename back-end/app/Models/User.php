@@ -12,8 +12,13 @@ class User extends Model
     {
         return $this->belongsToMany(User::class, 'notice_users', 'id_notice', 'id_user');
     }
-    public function preferencesUsers()
+    public function preferences()
     {
-        return $this->belongsToMany(Preferences::class);
+        return $this->belongsToMany(
+            Preferences::class,
+            'preferences-user',
+            'user_id',
+            'preference_id'
+        );
     }
 }

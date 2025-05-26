@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Preferences;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -34,46 +35,54 @@ class UserController extends Controller
         return response()->json(['message' => 'Credenciales inválidas'], 401);
     }
 
+
+
     public function store(Request $request)
     {
-
         $validator = Validator::make($request->all(), [
-            "name" => "required",
-            "email" => "required|email",
+            "name" => "required|string|max:255",
+            "email" => "required|email|unique:users,email",
             "pass" => "required|string|min:8",
-
+            "preferences" => "array",
+            "preferences.*" => "string"
         ]);
 
+
+
         if ($validator->fails()) {
-            $data = [
+            return response()->json([
                 "message" => "Error en la validación de los datos",
                 "errors" => $validator->errors(),
                 "status" => 400
-            ];
-            return response()->json($data, 400);
+            ], 400);
         }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            "pass" => "required|string|min:8",
-
+            'password' => Hash::make($request->pass),
         ]);
 
-
         if (!$user) {
-            $data = [
+            return response()->json([
                 "message" => "Error al crear el usuario",
                 "status" => 500
-            ];
-            return response()->json($data, 500);
+            ], 500);
         }
 
+        if ($request->has('preferences')) {
+            $preferenceIds = [];
+            foreach ($request->preferences as $prefName) {
+                $pref = Preferences::firstOrCreate(['name' => $prefName]);
+                $preferenceIds[] = $pref->id;
+            }
 
-        $data = [
-            "user" => $user,
+            $user->preferences()->sync($preferenceIds);
+        }
+
+        return response()->json([
+            "user" => $user->only(['id', 'name', 'email']),
             "status" => 201,
-        ];
-        return response()->json($data, 201);
+        ], 201);
     }
 }

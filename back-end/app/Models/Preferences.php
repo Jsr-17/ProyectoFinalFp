@@ -9,6 +9,11 @@ class Preferences extends Model
     protected $fillable = ['name'];
     public function preferences()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(
+            Preferences::class,
+            'preferences-user',
+            'user_id',
+            'preference_id'
+        );
     }
 }

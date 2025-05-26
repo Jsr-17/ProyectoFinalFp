@@ -6,18 +6,20 @@ export const userService = () => {
     email: string;
   };
 
-  type register = {
+  type registerUser = {
     email: string;
     pass: string;
     name: string;
+    preferences: string[];
   };
 
   const login = async (data: log) => api.post("/users", data);
 
-  const register = async (data: register) => api.post("/users/register", data);
+  const registerUser = async (data: registerUser) =>
+    api.post("/users/register", data);
 
   return {
     login,
-    register,
+    registerUser,
   };
 };

@@ -2,6 +2,7 @@ import { TextField } from "@mui/material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import SelectMultivalor from "../formsComponents/SelectMultivalue";
+import { userService } from "../../../api/services/userService";
 
 type FormData = {
   nombre: string;
@@ -11,17 +12,42 @@ type FormData = {
   temasInteres: string[];
 };
 
+type registerUser = {
+  email: string;
+  pass: string;
+  name: string;
+  preferences: string[];
+};
+
 export const RegisterPage = () => {
+  const { registerUser } = userService();
   const {
     register,
-    handleSubmit,
     formState: { errors },
     watch,
     control,
+    handleSubmit,
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
+  const handleSubmitt = async (data: registerUser) => {
+    try {
+      const response = await registerUser(data);
+      console.log(response);
+    } catch (error) {
+      console.error("Error al registrar usuario:", error);
+    }
+  };
+
+  const dataSend = (data: FormData) => {
+    const { contrasenya, correo, nombre, temasInteres } = data;
+
+    const dataRegister: registerUser = {
+      email: correo,
+      pass: contrasenya,
+      name: nombre,
+      preferences: temasInteres,
+    };
+    handleSubmitt(dataRegister);
   };
 
   const password = watch("contrasenya");
@@ -39,7 +65,7 @@ export const RegisterPage = () => {
       <Container maxWidth="md">
         <Box
           component="form"
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(dataSend)}
           sx={{ display: "flex", flexDirection: "column", gap: 2 }}
         >
           <TextField
