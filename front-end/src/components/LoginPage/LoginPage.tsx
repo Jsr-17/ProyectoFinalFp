@@ -4,6 +4,8 @@ import { Link } from "react-router";
 import { userService } from "../../../api/services/userService";
 
 export const LoginPage = () => {
+  const [load, setLoad] = useState(false);
+  const [message, setMessage] = useState("");
   const { login } = userService();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
@@ -11,8 +13,15 @@ export const LoginPage = () => {
 
   const handleLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const response = await login(data);
-    console.log(response);
+    if (email == "" || pass == "") {
+      return;
+    }
+
+    try {
+      await login(data);
+    } catch (error) {
+      setMessage(error?.response?.data.message);
+    }
   };
 
   return (
@@ -46,6 +55,7 @@ export const LoginPage = () => {
             margin="normal"
             variant="outlined"
             value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
             fullWidth
@@ -54,6 +64,7 @@ export const LoginPage = () => {
             margin="normal"
             variant="outlined"
             value={pass}
+            onChange={(e) => setPass(e.target.value)}
           />
           <Button
             variant="contained"
@@ -65,6 +76,10 @@ export const LoginPage = () => {
           >
             Iniciar Sesión
           </Button>
+
+          <Typography marginTop={"15px"} textAlign={"center"} color={"red"}>
+            {message}
+          </Typography>
           <Typography gutterBottom textAlign="center" sx={{ mt: 2 }}>
             No tienes una cuenta registrate{" "}
             <Link to={"/auth/register"}>aqui</Link>

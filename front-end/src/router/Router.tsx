@@ -5,7 +5,7 @@ import { RouterAuth } from "./RouterAuth";
 export const Router = () => {
   return (
     <Routes>
-      <Route path="auth/*" element={<RouterAuth></RouterAuth>}></Route>
+      <Route path={"auth/*"} element={<RouterAuth></RouterAuth>}></Route>
       <Route path="*" element={<RouterApp></RouterApp>}></Route>
     </Routes>
   );
