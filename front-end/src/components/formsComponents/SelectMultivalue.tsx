@@ -15,19 +15,25 @@ const SelectMultivalor: React.FC<SelectMultivalorProps> = ({
   error,
   helperText,
 }) => {
+  const handleChange = (_: any, newValue: string[]) => {
+    if (newValue.length <= 3) {
+      onChange(newValue);
+    }
+  };
+
   return (
     <div>
       <Autocomplete
         multiple
         options={opciones}
         value={value}
-        onChange={(_, newValue) => onChange(newValue)}
+        onChange={handleChange}
         disableCloseOnSelect
         renderInput={(params) => (
           <TextField
             {...params}
             label="Temas de interés"
-            placeholder="Selecciona varios"
+            placeholder="Selecciona máximo tres"
             error={error}
             helperText={helperText}
           />

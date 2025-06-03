@@ -2,8 +2,9 @@ import { CircularProgress, TextField } from "@mui/material";
 import { Box, Button, Container, Typography } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import SelectMultivalor from "../formsComponents/SelectMultivalue";
-import { userService } from "../../../api/services/userService";
 import { useState } from "react";
+import { userService } from "../../api/services/userService";
+import { useNavigate } from "react-router";
 
 type FormData = {
   nombre: string;
@@ -21,6 +22,7 @@ type registerUser = {
 };
 
 export const RegisterPage = () => {
+  const navigate = useNavigate();
   const [load, setLoad] = useState(true);
   const [dataError, setDataError] = useState("");
 
@@ -37,9 +39,10 @@ export const RegisterPage = () => {
     try {
       setLoad(false);
       await registerUser(data);
-    } catch (error) {
-      setDataError(error.response?.data?.message);
-      console.log(error);
+
+      navigate("/index");
+    } catch (error: any) {
+      setDataError(error.response?.data?.message || "Error al registrar");
     } finally {
       setLoad(true);
     }

@@ -8,15 +8,21 @@ import {
   Typography,
   CssBaseline,
 } from "@mui/material";
+import { Outlet, useNavigate } from "react-router";
 
 export const IndexPage = () => {
   const drawerWidth = 240;
-  const menuItems = ["Inicio", "Noticias", "Opiniones", "Favoritos", "Ajustes"];
+  const navigate = useNavigate();
+
+  const menuItems = [
+    { label: "Index", path: "" },
+    { label: "Noticias", path: "noticias" },
+    { label: "Favoritos", path: "favoritos" },
+  ];
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      {/* Menú lateral */}
       <Drawer
         variant="permanent"
         sx={{
@@ -36,31 +42,41 @@ export const IndexPage = () => {
           </Typography>
         </Toolbar>
         <List>
-          {menuItems.map((text, index) => (
-            <ListItem button key={index} sx={{ paddingX: 3 }}>
-              <ListItemText primary={text} />
+          {menuItems.map((item, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => navigate(item.path)}
+              sx={{
+                paddingX: 3,
+                [`&:hover`]: { cursor: "pointer" },
+              }}
+            >
+              <ListItemText primary={item.label} />
             </ListItem>
           ))}
         </List>
       </Drawer>
-
-      {/* Contenido principal */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           p: 4,
           backgroundColor: "#fafafa",
-          minHeight: "100vh",
+          minHeight: "75vh",
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Bienvenido al Periódico de IA
-        </Typography>
-        <Typography>
-          Aquí aparecerán tus noticias personalizadas, opiniones destacadas y
-          más.
-        </Typography>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 4,
+            backgroundColor: "#fafafa",
+            minHeight: "75vh",
+          }}
+        >
+          <Outlet />
+        </Box>
       </Box>
     </Box>
   );

@@ -23,16 +23,20 @@ class UserController extends Controller
             'pass' => 'required|min:6',
         ]);
 
+
+
         $user = User::where('email', $validated['email'])->first();
+
 
         if (!$user) {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
         }
-        if (Hash::check($validated['pass'], $user->pass)) {
-            return response()->json(['message' => 'Login exitoso', "id" => $user->id], 200);
+
+        if (Hash::check($validated['pass'], $user->password)) {
+            return response()->json(['message' => 'Login exitoso',  "user" => $user->only(['id', 'name', 'email'])], 200);
         }
 
-        return response()->json(['message' => 'Credenciales inválidas'], 401);
+        return response()->json(['message' => 'Credenciales inválidas',], 401);
     }
 
 

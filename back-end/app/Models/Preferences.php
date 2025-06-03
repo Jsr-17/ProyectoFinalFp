@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Preferences extends Model
 {
     protected $fillable = ['name'];
-    public function preferences()
+    public function users()
     {
         return $this->belongsToMany(
             Preferences::class,

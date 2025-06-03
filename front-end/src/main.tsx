@@ -6,15 +6,19 @@ import { AppTheme } from "./theme/Apptheme.tsx";
 import { ThemeProvider } from "@emotion/react";
 import { whiteTheme } from "./theme/theme.ts";
 import { BrowserRouter } from "react-router";
+import { Provider } from "react-redux";
+import { store } from "./store/store.ts";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <ThemeProvider theme={whiteTheme}>
-        <AppTheme>
-          <App />
-        </AppTheme>
-      </ThemeProvider>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <ThemeProvider theme={whiteTheme}>
+          <AppTheme>
+            <App />
+          </AppTheme>
+        </ThemeProvider>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>
 );
