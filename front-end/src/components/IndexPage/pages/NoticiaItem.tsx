@@ -1,4 +1,4 @@
-import { Box, Button, Collapse, ListItem, Typography } from "@mui/material";
+import { Box, Button, Collapse, ListItem, Typography, useMediaQuery, useTheme } from "@mui/material";
 
 type Props = {
   notice: {
@@ -8,6 +8,7 @@ type Props = {
   isExpanded: boolean;
   onToggle: () => void;
   onSave: () => void;
+  btn: boolean;
 };
 
 export const NoticiaItem = ({
@@ -15,51 +16,76 @@ export const NoticiaItem = ({
   isExpanded,
   onToggle,
   onSave,
+  btn,
 }: Props) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <ListItem
       divider
       sx={{
         display: "flex",
-        flexDirection: "row",
-        alignItems: "flex-start",
+        flexDirection: isMobile ? "column" : "row",
+        alignItems: isMobile ? "stretch" : "flex-start",
         gap: 2,
-        flexWrap: "wrap",
+        px: 2,
+        py: 2,
       }}
     >
-      <Box sx={{ flex: 1, minWidth: 0, cursor: "pointer" }} onClick={onToggle}>
+      <Box
+        sx={{
+          flex: 1,
+          minWidth: 0,
+          cursor: "pointer",
+        }}
+        onClick={onToggle}
+      >
         <Typography
           variant="h6"
-          sx={{ fontWeight: "bold", mb: isExpanded ? 1 : 0 }}
+          sx={{
+            fontWeight: "bold",
+            fontSize: isMobile ? "1.1rem" : "1.25rem",
+            mb: isExpanded ? 1 : 0,
+            wordBreak: "break-word",
+          }}
         >
           {notice.title}
         </Typography>
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
           <Typography
-            variant="body1"
+            variant="body2"
             sx={{
-              fontSize: "1.2rem",
+              fontSize: "1rem",
               color: "text.secondary",
-              whiteSpace: "normal",
+              whiteSpace: "pre-wrap",
             }}
           >
             {notice.description?.trim() || "No hay descripción disponible."}
           </Typography>
         </Collapse>
       </Box>
-      <Button
-        variant="outlined"
-        size="small"
-        sx={{
-          alignSelf: "center",
-          whiteSpace: "nowrap",
-          height: "fit-content",
-          ml: "auto",
-        }}
-        onClick={onSave}
-      >
-        Guardar noticia
-      </Button>
+
+      {btn && (
+        <Box
+          sx={{
+            alignSelf: isMobile ? "flex-end" : "center",
+            mt: isMobile ? 1 : 0,
+          }}
+        >
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={onSave}
+            sx={{
+              whiteSpace: "nowrap",
+              fontSize: "0.85rem",
+            }}
+          >
+            Guardar noticia
+          </Button>
+        </Box>
+      )}
     </ListItem>
   );
 };

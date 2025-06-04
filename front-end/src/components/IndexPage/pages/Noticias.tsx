@@ -11,20 +11,17 @@ import { fetchNoticesFromGemini } from "../../../api/ia";
 import { NoticiaItem } from "./NoticiaItem";
 import { useSelector } from "react-redux";
 import { arrayToPhrase } from "../../../functions";
+import { Notice, NoticesResponse, SavedNoticeUser } from "../../../models";
+import {noticeService} from "../../../api/services/noticeService"
 
-type Notice = {
-  title: string;
-  description?: string;
-};
 
-type NoticesResponse = {
-  [category: string]: Notice[];
-};
+
 
 export const Noticias = () => {
+  const {saveNotice} = noticeService();
   const user = useSelector((state) => state.user.user);
   const { preferences } = user;
-
+  
   const phrase = arrayToPhrase(preferences);
 
   const [dataPromps, setDataPromps] = useState<NoticesResponse | null>(null);
@@ -39,7 +36,7 @@ export const Noticias = () => {
     setError(null);
     try {
       const data = await fetchNoticesFromGemini(
-        "Noticias sobre " + phrase + " hoy 2 de cada "
+        "Noticias sobre " + phrase + " hoy 2 de cada y que no sobrepasen los 255 caracteres ni el titulo ni la descripcion"
       );
       setDataPromps(data);
     } catch (err) {
@@ -60,8 +57,9 @@ export const Noticias = () => {
     }));
   };
 
-  const handleSave = (notice: Notice) => {
-    alert(`Noticia guardada: ${notice.title}`);
+  const handleSave = async (notice: Notice,user_id:string) => {
+    const data : SavedNoticeUser={notice,user_id}
+    await saveNotice(data)
   };
 
   return (
@@ -102,7 +100,8 @@ export const Noticias = () => {
                   notice={news}
                   isExpanded={expandedIndex[category] === index}
                   onToggle={() => handleToggle(category, index)}
-                  onSave={() => handleSave(news)}
+                  onSave={() => handleSave(news,user.id)}
+                  btn
                 />
               ))}
             </List>
