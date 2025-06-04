@@ -12,17 +12,15 @@ import { NoticiaItem } from "./NoticiaItem";
 import { useSelector } from "react-redux";
 import { arrayToPhrase } from "../../../functions";
 import { Notice, NoticesResponse, SavedNoticeUser } from "../../../models";
-import {noticeService} from "../../../api/services/noticeService"
-
-
-
+import { noticeService } from "../../../api/services/noticeService";
 
 export const Noticias = () => {
-  const {saveNotice} = noticeService();
+  const { saveNotice } = noticeService();
   const user = useSelector((state) => state.user.user);
   const { preferences } = user;
-  
+
   const phrase = arrayToPhrase(preferences);
+  const [btnTexts, setBtnTexts] = useState<{ [key: string]: string }>({});
 
   const [dataPromps, setDataPromps] = useState<NoticesResponse | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,7 +34,9 @@ export const Noticias = () => {
     setError(null);
     try {
       const data = await fetchNoticesFromGemini(
-        "Noticias sobre " + phrase + " hoy 2 de cada y que no sobrepasen los 255 caracteres ni el titulo ni la descripcion"
+        "Noticias sobre " +
+          phrase +
+          " hoy dame 2 noticias  de cada ambito y que no sean excesivamente largo"
       );
       setDataPromps(data);
     } catch (err) {
@@ -57,9 +57,13 @@ export const Noticias = () => {
     }));
   };
 
-  const handleSave = async (notice: Notice,user_id:string) => {
-    const data : SavedNoticeUser={notice,user_id}
-    await saveNotice(data)
+  const handleSave = async (notice: Notice, user_id: string) => {
+    const data: SavedNoticeUser = { notice, user_id };
+    await saveNotice(data);
+    setBtnTexts((prev) => ({
+      ...prev,
+      [notice.title]: "Noticia guardada",
+    }));
   };
 
   return (
@@ -100,8 +104,8 @@ export const Noticias = () => {
                   notice={news}
                   isExpanded={expandedIndex[category] === index}
                   onToggle={() => handleToggle(category, index)}
-                  onSave={() => handleSave(news,user.id)}
-                  btn
+                  onSave={() => handleSave(news, user.id)}
+                  btn_text={btnTexts[news.title] || "Guardar noticia"}
                 />
               ))}
             </List>

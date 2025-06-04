@@ -2,12 +2,12 @@ import { Box, Typography, List } from "@mui/material";
 import { noticeService } from "../../../api/services/noticeService";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
- 
+
 import { Notice } from "../../../models";
 import { NoticiaItem } from "./NoticiaItem";
 
 export const Favoritos = () => {
-  const { getNoticesFav } = noticeService();
+  const { getNoticesFav, deleteNoticeFav } = noticeService();
   const user = useSelector((state) => state.user.user);
   const [noticesArr, setNoticesArr] = useState<Notice[]>([]);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
@@ -20,6 +20,15 @@ export const Favoritos = () => {
       setNoticesArr(notices);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleDeleteNotice = async (notice_id: number) => {
+    try {
+      await deleteNoticeFav(id, notice_id);
+      setNoticesArr((prev) => prev.filter((n) => n.id !== notice_id));
+    } catch (error) {
+      console.log("Error al eliminar la noticia:", error);
     }
   };
 
@@ -49,6 +58,8 @@ export const Favoritos = () => {
               notice={news}
               isExpanded={expandedIndex === index}
               onToggle={() => handleToggle(index)}
+              onDelete={() => handleDeleteNotice(news.id)}
+              btn_text="Eliminar"
             />
           ))}
         </List>

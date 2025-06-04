@@ -33,7 +33,15 @@ export const IndexPage = () => {
   ];
 
   const drawer = (
-    <Box sx={{ textAlign: "center", mt: 2 }}>
+    <Box
+      sx={{
+        textAlign: "center",
+        mt: 2,
+        "&:hover": {
+          cursor: "pointer",
+        },
+      }}
+    >
       <Typography variant="h6" sx={{ mb: 2 }}>
         Menú
       </Typography>
@@ -62,24 +70,22 @@ export const IndexPage = () => {
     <Box sx={{ display: "flex", width: "100%", overflowX: "hidden" }}>
       <CssBaseline />
 
-      {/* FAB en móviles */}
       {isMobile && (
-  <Fab
-    color="primary"
-    aria-label="menu"
-    onClick={handleDrawerToggle}
-    sx={{
-      position: "fixed",
-      bottom: 80, // ← más arriba
-      left: 16,
-      zIndex: theme.zIndex.drawer + 2,
-    }}
-  >
-    <HomeIcon />
-  </Fab>
-)}
+        <Fab
+          color="primary"
+          aria-label="menu"
+          onClick={handleDrawerToggle}
+          sx={{
+            position: "fixed",
+            bottom: 80,
+            left: 16,
+            zIndex: theme.zIndex.drawer + 2,
+          }}
+        >
+          <HomeIcon />
+        </Fab>
+      )}
 
-      {/* Drawer */}
       <Drawer
         variant={isMobile ? "temporary" : "permanent"}
         open={isMobile ? mobileOpen : true}

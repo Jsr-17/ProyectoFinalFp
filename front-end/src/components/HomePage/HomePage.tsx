@@ -5,28 +5,12 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
-  Divider,
-  List,
-  ListItem,
-  TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 export const HomePage = () => {
-  const [opiniones, setOpiniones] = useState([
-    "Excelente periódico, siempre me recomienda lo que me gusta.",
-    "Me encanta cómo adapta las noticias a mis intereses.",
-    "Podrían mejorar la sección de deportes, pero en general es genial.",
-  ]);
-  const [comentario, setComentario] = useState("");
-
-  const enviarOpinion = () => {
-    if (comentario.trim()) {
-      setOpiniones([comentario, ...opiniones]);
-      setComentario("");
-    }
-  };
+  const navigate = useNavigate();
 
   return (
     <Box
@@ -65,6 +49,7 @@ export const HomePage = () => {
                 color: "white",
               },
             }}
+            onClick={() => navigate("/index")}
           >
             Empezar ahora
           </Button>
@@ -75,9 +60,9 @@ export const HomePage = () => {
           <CardActionArea>
             <CardMedia
               component="img"
-              height="100"
-              image="/src/assets/react.svg"
-              alt="green iguana"
+              height="150"
+              image="/src/assets/paso1.png"
+              alt="paso 1"
             />
             <CardContent>
               <Typography
@@ -103,9 +88,9 @@ export const HomePage = () => {
           <CardActionArea>
             <CardMedia
               component="img"
-              height="100"
-              image="/src/assets/react.svg"
-              alt="green iguana"
+              height="150"
+              image="/src/assets/paso2.png"
+              alt="Paso 2"
             />
             <CardContent>
               <Typography
@@ -131,9 +116,9 @@ export const HomePage = () => {
           <CardActionArea>
             <CardMedia
               component="img"
-              height="100"
-              image="/src/assets/react.svg"
-              alt="green iguana"
+              height="150"
+              image="/src/assets/paso3.png"
+              alt="Paso 3"
             />
             <CardContent>
               <Typography
@@ -155,55 +140,6 @@ export const HomePage = () => {
             </CardContent>
           </CardActionArea>
         </Card>
-      </Box>
-      <Box marginTop={"8px"} marginBottom={"75px"} minWidth={"85%"}>
-        <Box
-          sx={{
-            mt: 8,
-            p: 4,
-            bgcolor: "#f9f9f9",
-            borderRadius: "16px",
-            boxShadow: 3,
-            maxWidth: "800px",
-            mx: "auto",
-          }}
-        >
-          <Typography
-            variant="h5"
-            fontWeight="bold"
-            gutterBottom
-            textAlign={"center"}
-            marginBottom={"25px"}
-          >
-            Opiniones de nuestros lectores
-          </Typography>
-
-          <TextField
-            label="Deja tu opinión"
-            multiline
-            fullWidth
-            value={comentario}
-            onChange={(e) => setComentario(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-
-          <Box display={"flex"} justifyContent={"end"}>
-            <Button variant="contained" onClick={enviarOpinion}>
-              Enviar
-            </Button>
-          </Box>
-
-          <List sx={{ mt: 4 }}>
-            {opiniones.map((op, idx) => (
-              <React.Fragment key={idx}>
-                <ListItem sx={{ py: 1, my: 2, textAlign: "center" }}>
-                  {op}
-                </ListItem>
-                {idx < opiniones.length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </List>
-        </Box>
       </Box>
     </Box>
   );
